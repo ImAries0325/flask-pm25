@@ -7,12 +7,57 @@
     <style>
         body{
             text-align: center;
-            background-color: rgb(174, 255, 242);
+            background-color: rgb(26, 112, 98);
+        }
+
+        .price{
+            color:red;
+        }
+
+        .title{
+            background:orange;
+            color: white;
+            padding: 6px;
+        }
+
+        img{
+            border: 1px solid black;
+            width: 300px;
+        }
+
+        form{
+            color: black
         }
     </style>
 </head>
 <body>
     <h1>{{name}}歡迎登入</h1>
     <p>目前時間:{{now}}</p>
+
+    <form action="/bmi">
+        <label for="">身高</label>
+        <input type="number" name="height">
+        <label for="">體重</label>
+        <input type="number" name="weight">
+        <button type="submit">計算</button>
+    </form>
+    <p>BMI:{{bmi}}</p>
+
+    {% if books %}
+    {% for book in books %}
+    <h1 class="title">{{book.name}}</h1>
+    <h3 class="price">{{book.price}}</h3>
+    <img src="{{book.image_url}}" alt="">
+    <!-- <li>{{book.name}} - {{book.price}} - {{book.image_url}}</li> -->
+    {% endfor %}
+    {% else %}
+    <h1 style="color: white;">販售完畢，目前無書籍！</h1>
+    {% endif %}
+
+
+
+    
+    <br>
+    <a href="/pm25-data">pm25-data</a>
 </body>
 </html>
