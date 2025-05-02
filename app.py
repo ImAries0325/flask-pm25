@@ -2,10 +2,34 @@ from flask import Flask, render_template, request
 from datetime import datetime
 import pandas as pd
 import pymysql
-from pm25 import get_pm25_data_from_mysql, update_db
+from pm25 import get_pm25_data_from_mysql, update_db, get_pm25_data_by_site
 import json
 
 app = Flask(__name__)
+
+
+@app.route("/pm25-data-site")
+def pm25_data_by_site():
+    county = request.args.get("county")
+    site = request.args.get("site")
+
+    if not county or not site:
+        result = json.dumps({"error": "縣市跟站點名稱不正確!"}, ensure_ascii=False)
+    else:
+        columns, datas = get_pm25_data_by_site(county, site)
+        df = pd.DataFrame(datas, columns=columns)
+        date = df["datacreationdate"].apply(lambda x: x.strftime("%Y-%m-%d %H"))
+
+        data = {
+            "county": county,
+            "site": site,
+            "x_data": date.to_list(),
+            "y_data": df["pm25"].to_list(),
+        }
+
+        result = json.dumps(data, ensure_ascii=False)
+
+    return result
 
 
 @app.route("/filter", methods=["POST"])
@@ -53,10 +77,9 @@ def index():
         # 繪製所需資料
         x_data = df["site"].to_list()
 
+    y_data = df["pm25"].to_list()
     columns = df.columns.tolist()
     datas = df.values.tolist()
-
-    y_data = df["pm25"].to_list()
 
     return render_template(
         "index.html",
