@@ -20,6 +20,8 @@
 
     <div id="main" style="width: 800px;height:400px;"></div>
 
+
+
     <a class="btn-update" href="/update-db">更新資料庫</a>
 
     <form action="/" method="GET">
@@ -33,6 +35,9 @@
         </select>
         <button type="submit">查詢</button>
     </form>
+
+    <a href="/pm25-site">詳細站點資訊</a>
+
     <div id="chart-data" data-labels='{{ x_data | tojson | safe }}' data-values='{{ y_data | tojson | safe}}'></div>
     <h2 style="text-align: left;margin-left: 64px;color:rgb(54,95,6)">選擇縣市:{{selected_county}}</h2>
     <table border="1">
@@ -49,12 +54,10 @@
                 {% for data in row[1:] %}
                 <td>{{data}}</td>
                 {% endfor %}
-            {{data}}
             </tr>
             {% endfor %}
         </tbody>
     </table>
-    <br>
 
     <script type="text/javascript">
 
@@ -85,7 +88,7 @@
           yAxis: {},
           series: [
             {
-              name: '销量',
+              name: 'PM25',
               type: 'bar',
               data: values
             }
