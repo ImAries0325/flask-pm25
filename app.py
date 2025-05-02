@@ -42,14 +42,20 @@ def index():
 
     # 選取縣市後的資料(預設ALL)
     county = request.args.get("county", "ALL")
-    if county != "ALL":
+
+    if county == "ALL":
+        df1 = df.groupby("county")["pm25"].mean().reset_index()
+        x_data = df1["county"].to_list()
+
+    else:
         # 取得特定縣市資料
         df = df.groupby("county").get_group(county)
-        columns = df.columns.tolist()
-        datas = df.values.tolist()
+        # 繪製所需資料
+        x_data = df["site"].to_list()
 
-    # 繪製所需資料
-    x_data = df["site"].to_list()
+    columns = df.columns.tolist()
+    datas = df.values.tolist()
+
     y_data = df["pm25"].to_list()
 
     return render_template(
